@@ -2,7 +2,7 @@ const { Thought, User } = require("../models");
 
 const reactions = async (thoughtId) =>
   Thought.aggregate([
-    // only include the given student by using $match
+
     { $match: { _id: ObjectId(thoughtId) } },
     {
       $unwind: "$reactions",
@@ -10,19 +10,19 @@ const reactions = async (thoughtId) =>
     {
       $group: {
         _id: ObjectId(thoughtId),
-        // overallGrade: { $avg: '$assignments.score' },
+   
       },
     },
   ]);
 
 module.exports = {
-  // Get all thought
+
   getThoughts(req, res) {
     Thought.find()
       .then((thoughts) => res.json(thoughts))
       .catch((err) => res.status(500).json(err));
   },
-  // Get a thought
+
   getSingleThought(req, res) {
     Thought.findOne({ _id: req.params.thoughtId })
       .select("-__v")
@@ -33,7 +33,7 @@ module.exports = {
       )
       .catch((err) => res.status(500).json(err));
   },
-  // Create a thought
+ 
   createThought(req, res) {
     Thought.create(req.body)
       .then((thought) => {
@@ -53,7 +53,7 @@ module.exports = {
         return res.status(500).json(err);
       });
   },
-  // Delete a thought
+  
   deleteThought(req, res) {
     Thought.findOneAndDelete({ _id: req.params.thoughtId })
       .then((thought) =>
@@ -64,7 +64,7 @@ module.exports = {
       .then(() => res.json({ message: "Thought and reactions deleted" }))
       .catch((err) => res.status(500).json(err));
   },
-  // Update a thought
+ 
   updateThought(req, res) {
     Thought.findOneAndUpdate(
       { _id: req.params.thoughtId },
@@ -78,7 +78,7 @@ module.exports = {
       )
       .catch((err) => res.status(500).json(err));
   },
-  // adding a reaction
+  
   createReaction(req, res) {
     console.log("You are adding a reaction");
     console.log(req.body);
@@ -94,12 +94,12 @@ module.exports = {
       )
       .catch((err) => res.status(500).json(err));
   },
-  // deleting a reaction
+  
   deleteReaction(req, res) {
     Thought.findOneAndUpdate(
       { id: req.params.thoughtId },
       { $pull: { reactions: { _id: req.params.reactionId } } },
-    //   { runValidators: true, new: true }
+  
     )
       .then((thought) =>
         !thought

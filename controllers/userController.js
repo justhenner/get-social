@@ -1,18 +1,16 @@
 const { ObjectId } = require("mongoose").Types;
 const { User, Thought } = require("../models");
 
-// Aggregate function to get the number of students overall
+
 const friendCount = async () =>
   User.aggregate()
     .count("friendCount")
     .then((numberOfFriends) => numberOfFriends);
 
-// probably need the grade function to be a thought or reaction function most likely will just delete
-//
-// Aggregate function for getting the overall grade using $avg
+
 const thoughts = async (userId) =>
   Thought.aggregate([
-    // only include the given student by using $match
+    
     { $match: { _id: ObjectId(thoughtId) } },
     {
       $unwind: "$thoughts",
@@ -40,7 +38,7 @@ module.exports = {
         return res.status(500).json(err);
       });
   },
-  // Get a single user
+  
   getSingleUser(req, res) {
     User.findOne({ _id: req.params.userId })
       .select("-__v")
@@ -54,13 +52,13 @@ module.exports = {
         return res.status(500).json(err);
       });
   },
-  // create a new user
+
   createUser(req, res) {
     User.create(req.body)
       .then((user) => res.json(user))
       .catch((err) => res.status(500).json(err));
   },
-  // Delete a user and remove them from the thought
+
   deleteUser(req, res) {
     User.findOneAndRemove({ _id: req.params.userId })
       .then((user) =>
@@ -82,7 +80,7 @@ module.exports = {
         res.status(500).json(err);
       });
   },
-  // Update a user
+ 
   updateUser(req, res) {
     User.findOneAndUpdate(
       { _id: req.params.userId },
@@ -96,7 +94,7 @@ module.exports = {
       )
       .catch((err) => res.status(500).json(err));
   },
-  // Add a thought to a user
+
   addFriend(req, res) {
     console.log("You are adding a friend");
     console.log(req.body);
@@ -112,9 +110,9 @@ module.exports = {
       )
       .catch((err) => res.status(500).json(err));
   },
-  // Remove thought from a user
+
   removeFriend(req, res) {
-      // Remove friend from user's friends array
+
       User.updateOne(
         { _id: req.params.userId },
         { $pull: { friends: req.params.friendId } }
